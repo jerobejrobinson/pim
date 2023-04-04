@@ -1,12 +1,15 @@
 import clientPromise from '@/lib/mongodb'
 import { useEffect, useState } from 'react'
-import 'normalize.css'
+
+import { XML, PIES, Item, jsonToClass } from '@/lib/PIES'
 
 import ItemComp from '@/components/item/Item'
+import AddItem from '@/components/item/AddItem'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
+import 'normalize.css'
 export async function getServerSideProps() {
   try {
     const client = await clientPromise
@@ -25,9 +28,10 @@ export async function getServerSideProps() {
 }
 
 export default function Home({isConnected, items}) {
-  const [ itemArray, setItemArray] = useState(null)
-  const [ currentItemId, setCurrentItemId] = useState(null)
-  const [ previousItemIds, setPreviousItemId] = useState([])
+  const [ itemArray, setItemArray ] = useState(null)
+  const [ addNewItem, setAddNewItem ] = useState(false)
+  const [ currentItemId, setCurrentItemId ] = useState(null)
+  const [ previousItemIds, setPreviousItemId ] = useState([])
 
   useEffect(() => {
     if(!isConnected) return;
@@ -37,12 +41,30 @@ export default function Home({isConnected, items}) {
     })
   }, [])
 
+  const generatePiesXML = () => {
+    const xml = new XML()
+    const p = new PIES()
+    itemArray.map(item => {
+      p.addItem(jsonToClass(Item, JSON.stringify(item)))
+    })
+    console.log(xml.getOutput(p))
+  }
   if(!itemArray) return <div>loading...</div>
   return (
     <div style={{display: 'grid', gridTemplateColumns: '1fr 3fr', gridTemplateRows: '50px 1fr', gridTemplateAreas: '"top top" "nav main"',height: '100vh'}}>
-      <div style={{gridArea: "top", background: "grey", borderBottom: 'solid 4px rgba(0,0,0, .1)', borderTop: 'solid 4px rgba(0,0,0, .1)'}}>
-        <button style={{cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem', marginRight: '3px'}}>Add Item</button>
-        <button style={{cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem'}}>Generate PIES XML</button>
+      <div style={{gridArea: "top", background: "grey", borderBottom: 'solid 4px rgba(0,0,0, .1)', borderTop: 'solid 4px rgba(0,0,0, .1)', display: 'flex', flexDirection: 'row'}}>
+        <button 
+          style={{display: 'flex', alignItems: 'center', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem', marginRight: '3px'}}
+          onClick={() => {
+            setAddNewItem(true)
+          }}
+        >
+          Add Item
+        </button>
+
+        <button style={{display: 'flex', alignItems: 'center', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem'}} onClick={() => generatePiesXML()}>
+          Generate PIES XML
+        </button>
       </div>
       <div style={{gridArea: 'nav', display: 'grid', gridTemplateRows: '50px 1fr 25px', gridTemplateAreas: '"search" "item-list" "footer"'}}>
 
@@ -62,7 +84,7 @@ export default function Home({isConnected, items}) {
         {/* entry point for the list of part numbers to appear */}
         <div style={{gridArea: "item-list", backgroundColor: 'lightgrey'}}>
           {itemArray.map((item, index) => (
-            <div key={index} style={{background: '#e9e9e9', padding: '1rem', margin: '.5rem', cursor: 'pointer'}} onClick={() => setCurrentItemId(item._id)}>
+            <div key={index} style={{background: '#e9e9e9', padding: '1rem', margin: '.5rem', cursor: 'pointer'}} onClick={() => {setCurrentItemId(item._id); setAddNewItem(false)}}>
               {item.BrandAAIAID}: {item.PartNumber}
             </div>
           ))}
@@ -74,8 +96,9 @@ export default function Home({isConnected, items}) {
         </div>
       </div>
 
-      <div style={{background: '#f9f9f9', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)', padding: '1rem'}}>
-        {currentItemId && <ItemComp id={currentItemId}/>}
+      <div style={{background: '#bfbfbf', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)', padding: '1rem'}}>
+        {!addNewItem && currentItemId && <ItemComp id={currentItemId}/>}
+        {addNewItem && <AddItem />}
       </div>
     </div>
   )

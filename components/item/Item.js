@@ -48,6 +48,7 @@ export default function ItemComp({id}) {
                                 item.Descriptions.Description[index] = data.sendText(input.value)
                                 const res = await item.sendToAPI()
                                 if(!res.acknowledged) return;
+                                input.value = ''
                                 router.replace(router.asPath)
                             }}>
                                 <FontAwesomeIcon icon={faPenToSquare} />

@@ -4,9 +4,22 @@ import { ObjectId } from 'mongodb'
 export default async function updateItem(req, res) {
     const body = JSON.parse(req.body)
     const _id = body._id
-    delete body._id
 
+    if(!_id) {
+        try {
+            const client = await clientPromise
+            const db = await client.db('PIM')
+            const items = await db.collection('items')
+            const data = await items.insertOne({...body})
+            return res.status(200).json(data)
+        } catch(e) {
+            console.log(e)
+            return res.status(400);
+        }
+        
+    }
     try {
+        delete body._id
         const client = await clientPromise
         const db = await client.db('PIM')
         const items = await db.collection('items')
@@ -16,6 +29,4 @@ export default async function updateItem(req, res) {
         console.log(e)
         res.status(400);
     }
-    // console.log(req.body)    
-    res.status(200)
 }
