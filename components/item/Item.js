@@ -12,6 +12,7 @@ export default function ItemComp({id}) {
     useEffect(() => {
         (async () => {
             if(id != itemId) {
+                setItemId(id)
                 const data = await fetch(`api/getItem?id=${id}`, {
                     method: 'GET'
                 }).then(res => res.json()).then(data => data)
@@ -22,7 +23,8 @@ export default function ItemComp({id}) {
                 }
             }
         })();
-    }, [])
+    })
+
     if(!item) return (
         <div>
             How to use ap

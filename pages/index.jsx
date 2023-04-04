@@ -30,7 +30,6 @@ export default function Home({isConnected, items}) {
   const [ previousItemIds, setPreviousItemId] = useState([])
 
   useEffect(() => {
-    console.log(JSON.parse(items))
     if(!isConnected) return;
     if(!items) return;
     setItemArray(() => {
@@ -41,8 +40,9 @@ export default function Home({isConnected, items}) {
   if(!itemArray) return <div>loading...</div>
   return (
     <div style={{display: 'grid', gridTemplateColumns: '1fr 3fr', gridTemplateRows: '50px 1fr', gridTemplateAreas: '"top top" "nav main"',height: '100vh'}}>
-      <div style={{gridArea: "top", background: "grey"}}>
-        
+      <div style={{gridArea: "top", background: "grey", borderBottom: 'solid 4px rgba(0,0,0, .1)', borderTop: 'solid 4px rgba(0,0,0, .1)'}}>
+        <button style={{cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem', marginRight: '3px'}}>Add Item</button>
+        <button style={{cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem'}}>Generate PIES XML</button>
       </div>
       <div style={{gridArea: 'nav', display: 'grid', gridTemplateRows: '50px 1fr 25px', gridTemplateAreas: '"search" "item-list" "footer"'}}>
 
@@ -74,8 +74,8 @@ export default function Home({isConnected, items}) {
         </div>
       </div>
 
-      <div style={{background: '#f9f9f9', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)'}}>
-        <ItemComp id={currentItemId}/>
+      <div style={{background: '#f9f9f9', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)', padding: '1rem'}}>
+        {currentItemId && <ItemComp id={currentItemId}/>}
       </div>
     </div>
   )
