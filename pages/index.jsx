@@ -82,7 +82,7 @@ export default function Home({isConnected, items}) {
         </div>
 
         {/* entry point for the list of part numbers to appear */}
-        <div style={{gridArea: "item-list", backgroundColor: 'lightgrey'}}>
+        <div style={{gridArea: "item-list", backgroundColor: 'lightgrey', overflowY: 'hidden', height: '100%'}}>
           {itemArray.map((item, index) => (
             <div key={index} style={{background: '#e9e9e9', padding: '1rem', margin: '.5rem', cursor: 'pointer'}} onClick={() => {setCurrentItemId(item._id); setAddNewItem(false)}}>
               {item.BrandAAIAID}: {item.PartNumber}
@@ -96,7 +96,7 @@ export default function Home({isConnected, items}) {
         </div>
       </div>
 
-      <div style={{background: '#bfbfbf', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)', padding: '1rem'}}>
+      <div style={{background: '#bfbfbf', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)', padding: '1rem', overflowY: 'hidden'}}>
         {!addNewItem && currentItemId && <ItemComp id={currentItemId}/>}
         {addNewItem && <AddItem />}
       </div>

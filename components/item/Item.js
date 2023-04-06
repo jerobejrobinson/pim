@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons"
 
+import PartInterchangeCard from '@/components/item/PartInterchanges'
 export default function ItemComp({id}) {
     const router = useRouter()
     const [itemId, setItemId] = useState(null)
@@ -31,7 +32,7 @@ export default function ItemComp({id}) {
         </div>
     )
     return (
-        <div style={{display: 'grid', gridTemplateColumns: '1fr 5fr'}}>
+        <div>
             <div>Brand</div>
             <div>{item.BrandAAIAID}</div>
             <div>Part Number</div>
@@ -40,8 +41,8 @@ export default function ItemComp({id}) {
                 data = jsonToClass(Description, JSON.stringify(data))
                 return (
                     <>
-                        <div>{data.getDescriptionType()}</div>
-                        <div style={{display: 'grid', gridTemplateColumns: '5fr 1fr', alignItems: "center"}}>
+                        <div key={index}>{data.getDescriptionType()}</div>
+                        <div key={index + 100} style={{display: 'grid', gridTemplateColumns: '5fr 1fr', alignItems: "center"}}>
                             <input type="text" id={`${index}${data.getText()}`} placeholder={data.getText()}></input>
                             <button style={{width: "100%", cursor: 'pointer', background: 'rgba(0,0,0, .1)', }} onClick={async () => {
                                 const input = document.getElementById(`${index}${data.getText()}`)
@@ -58,11 +59,15 @@ export default function ItemComp({id}) {
                 )
             })}
             {item?.Packages?.Package.map((data, index) => {
-                <>
-                    <div key={index}>Weight</div>
-                    <div key={index + 100}>{data?.Weights?.Weight} <FontAwesomeIcon icon={faPenToSquare} /></div>
-                </>
+                return (
+                    <>
+                        <div key={index}>Weight</div>
+                        <div key={index + 100}>{data?.Weights?.Weight} <FontAwesomeIcon icon={faPenToSquare} /></div>
+                    </>
+                )
             })}
+
+            <PartInterchangeCard item={item} />
         </div>
     )
 }
