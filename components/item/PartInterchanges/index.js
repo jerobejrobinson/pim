@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { PartInterchange } from '@/lib/PIES'
 import Input from '@/components/util/Input'
@@ -6,10 +6,13 @@ export default function PartInterchangeCard({item}) {
     const router = useRouter()
     const [partNumbers, setPartNumbers] = useState(null)
     const [brandId, setBrandId] = useState(null)
+
+    useEffect(() => {
+      console.log(item)
+    })
     return (
         <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', columnGap: '1rem'}}>
-          <div style={{display: 'flex', flexDirection: "column", border: '1px solid black', padding: "1rem", position: 'relative', margin: '1.5rem 0 1.5rem 0',  background: "#f9f9f9", gridColumn: '1/3'}}>Item Part Number: {item.PartNumber}</div>
-          <div style={{display: 'flex', flexDirection: "column", border: '1px solid black', padding: "1rem", position: 'relative', margin: '1.5rem 0 1.5rem 0',  background: "#f9f9f9",  gridColumn: '3/5'}}>Item Brand ID: {item.BrandAAIAID}</div>
+            <div style={{display: 'flex', flexDirection: "column", border: '1px solid black', padding: "1rem", position: 'relative', margin: '1.5rem 0 1.5rem 0',  background: "#f9f9f9", gridColumn: '1/3'}}>Interchanges</div>
             {item.PartInterchangeInfo.PartInterchange.map((parts, i) => (
               <div key={i} style={{display: 'flex', flexDirection: "column", border: '1px solid black', padding: "1rem", position: 'relative', margin: '1.5rem 0 1.5rem 0',  background: "#f9f9f9", gridColumn: '1/5'}}>
                 <p style={{position: 'absolute', top: 0, transform: 'translateY(-100%)', background: "#ffffff", padding: '.5rem', border: '1px solid black'}}>Brand ID: {parts['@_BrandAAIAID']}</p>

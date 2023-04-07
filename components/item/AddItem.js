@@ -29,6 +29,7 @@ export default function AddItem() {
 
         const res = await item.sendToAPI()
         if(!res.acknowledged) return;
+        item.addID(res.insertedId)
         setNewItem(item)
         setStage(prev => prev + 1)
         // router.reload()
@@ -57,11 +58,11 @@ export default function AddItem() {
                 <Input id="MKT" label="Marketing Description *" textarea/>
             </div>
             <div  style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', columnGap: '1rem'}}>
-                <Input id="Quantity" label="Quantity" />
-                <Input id="Weight" label="Weight (LB)" />
-                <Input id="Length" label="Length (IN)" />
-                <Input id="Height" label="Height (IN)" />
-                <Input id="Width" label="Width (IN)" />
+                <Input id="Quantity" label="Quantity" type="number" />
+                <Input id="Weight" label="Weight (LB)" type="number" />
+                <Input id="Length" label="Length (IN)" type="number" />
+                <Input id="Height" label="Height (IN)" type="number" />
+                <Input id="Width" label="Width (IN)" type="number" />
             </div>
             <div>
                 

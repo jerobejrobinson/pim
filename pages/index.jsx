@@ -96,7 +96,7 @@ export default function Home({isConnected, items}) {
         </div>
       </div>
 
-      <div style={{background: '#bfbfbf', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)', padding: '1rem', overflowY: 'hidden'}}>
+      <div style={{background: '#bfbfbf', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)', padding: '1rem'}}>
         {!addNewItem && currentItemId && <ItemComp id={currentItemId}/>}
         {addNewItem && <AddItem />}
       </div>
