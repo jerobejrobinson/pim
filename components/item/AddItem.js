@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { Description, Item, Pack } from '@/lib/PIES'
+import { DigitalFileInformation,Description, Item, Pack } from '@/lib/PIES'
 import Input from '@/components/util/Input'
 import PartInterchangeCard from './PartInterchanges'
 export default function AddItem() {
     const router = useRouter()
     const [stage, setStage] = useState(1)
     const [newItem, setNewItem] = useState(null);
+    const [image, setImage] = useState(null);
+    const [selection, setSelection] = useState("P04")
 
     const handleCreateItem = async () => {
         const PartNumber = document.querySelector("#PartNumber");
@@ -35,9 +37,50 @@ export default function AddItem() {
         // router.reload()
     }
 
+    
+    const uploadToClient = (event) => {
+        if (event.target.files && event.target.files[0]) {
+          const i = event.target.files[0];
+    
+          setImage(i);
+        //   setCreateObjectURL(URL.createObjectURL(i));
+        }
+    };
+
+    const uploadToServer = async (event) => {
+        const body = new FormData();
+        body.append("file", image);
+        await fetch("/api/uploadImage", {
+          method: "POST",
+          body
+        }).then(res => res.json()).then(async (response) => {
+            newItem.addDigitalAssets(new DigitalFileInformation(response.fileName, response.fileType, selection, response.url))
+            const res = await newItem.sendToAPI()
+            console.log(res)
+            if(!res.acknowledged) return;
+            router.replace(router.asPath)
+        });
+
+        
+    };
     if( stage === 3) return (
         <div>
-            stage to add images
+            <div style={{display: 'flex', flexDirection: "column", border: '1px solid black', padding: "1rem", position: 'relative', margin: '1.5rem 0 1.5rem 0',  background: "#f9f9f9", gridColumn: '1/3'}}>Images</div>
+
+            <input type="file" style={{gridColumn: '1/3'}} id="choseFile" onChange={uploadToClient}/>
+            <select name="assetType" id="assetType" onChange={(e) => setSelection(e.target.value)}>
+                <option value="P04">Main Image</option>
+                <option value="P01">Secondary Image</option>
+            </select>
+            <button onClick={uploadToServer} style={{alignSelf: 'start'}}>send</button>
+            <div  style={{gridColumn: '1/5', margin: '2rem 0 0 0', display: 'flex', flexDirection: 'row'}}>
+                {newItem?.DigitalAssets?.DigitalFileInformation?.map(obj => (
+                    <div style={{position: 'relative'}}>
+                        <p style={{position: 'absolute', top: '0', transform: 'translateY(-50%)', padding: '1rem', background: "#f9f9f9"}}>{obj.AssetType}</p>
+                        <img style={{width: '25%', margin: 'auto'}} src={obj.URI} />
+                    </div>
+                ))}
+            </div>
         </div>
     )
     if(stage === 2) return (
