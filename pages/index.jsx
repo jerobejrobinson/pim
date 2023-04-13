@@ -9,7 +9,9 @@ import AddItem from '@/components/item/AddItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
+import styles from 'public/styles/index.module.css'
 import 'normalize.css'
+
 export async function getServerSideProps() {
   try {
     const client = await clientPromise
@@ -51,7 +53,7 @@ export default function Home({isConnected, items}) {
   }
   if(!itemArray) return <div>loading...</div>
   return (
-    <div style={{display: 'grid', gridTemplateColumns: '1fr 3fr', gridTemplateRows: '50px 1fr', gridTemplateAreas: '"top top" "nav main"',height: '100vh'}}>
+    <div style={{display: 'grid', gridTemplateColumns: '1fr 3fr', gridTemplateRows: '50px 1fr', gridTemplateAreas: '"top top" "nav main"', height: '100vh', overflow: 'hidden'}}>
       <div style={{gridArea: "top", background: "grey", borderBottom: 'solid 4px rgba(0,0,0, .1)', borderTop: 'solid 4px rgba(0,0,0, .1)', display: 'flex', flexDirection: 'row'}}>
         <button 
           style={{display: 'flex', alignItems: 'center', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem', marginRight: '3px'}}
@@ -62,11 +64,18 @@ export default function Home({isConnected, items}) {
           Add Item
         </button>
 
-        <button style={{display: 'flex', alignItems: 'center', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem'}} onClick={() => generatePiesXML()}>
+        <button style={{display: 'flex', alignItems: 'center', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem', marginRight: '3px'}} onClick={() => generatePiesXML()}>
           Generate PIES XML
         </button>
+        <button style={{display: 'flex', alignItems: 'center', cursor: 'pointer', border: 'none', background: 'rgba(255,255,255, 1)', height: '100%', padding: '1rem'}} onClick={() => generatePiesXML()}>
+          <a 
+            href="https://drive.google.com/drive/folders/1DV-vhLiT3wrQchuFp-qNwIi3REqTEDF4"
+            style={{textDecoration: 'None', color: "black"}}
+          >View Images at Google Drive</a>
+        </button>
+        
       </div>
-      <div style={{gridArea: 'nav', display: 'grid', gridTemplateRows: '50px 1fr 25px', gridTemplateAreas: '"search" "item-list" "footer"'}}>
+      <div style={{gridArea: 'nav', display: 'grid', gridTemplateRows: '50px calc(100vh - 125px) 25px', gridTemplateAreas: '"search" "item-list" "footer"'}}>
 
         {/* entry point for search db for a part number */}
         <div style={{gridArea: "search", backgroundColor: 'white', display: 'grid', gridTemplateColumns: '3fr 1fr'}}>
@@ -82,7 +91,7 @@ export default function Home({isConnected, items}) {
         </div>
 
         {/* entry point for the list of part numbers to appear */}
-        <div style={{gridArea: "item-list", backgroundColor: 'lightgrey', overflowY: 'hidden', height: '100%'}}>
+        <div style={{gridArea: "item-list", backgroundColor: 'lightgrey', overflowY: 'hidden', height: '100%', overflowY: 'scroll'}} className={styles.scrollbar} >
           {itemArray.map((item, index) => (
             <div key={index} style={{background: '#e9e9e9', padding: '1rem', margin: '.5rem', cursor: 'pointer'}} onClick={() => {setCurrentItemId(item._id); setAddNewItem(false)}}>
               {item.BrandAAIAID}: {item.PartNumber}
@@ -96,7 +105,7 @@ export default function Home({isConnected, items}) {
         </div>
       </div>
 
-      <div style={{background: '#bfbfbf', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)', padding: '1rem'}}>
+      <div style={{background: '#bfbfbf', gridArea: 'main', borderLeft: 'solid 4px rgba(0,0,0, .1)', padding: '1rem', overflowY: 'scroll', borderRight: 'solid 2px rgba(0,0,0, 1)'}} className={styles.scrollbar}>
         {!addNewItem && currentItemId && <ItemComp id={currentItemId}/>}
         {addNewItem && <AddItem />}
       </div>

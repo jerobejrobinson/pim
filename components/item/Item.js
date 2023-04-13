@@ -60,9 +60,31 @@ export default function ItemComp({id}) {
         </div>
     )
     return (
-        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', columnGap: '1rem'}}>
-            <Input id="brandid" label="Brand Id" text={item.BrandAAIAID} style={{gridColumn: '1/3'}}disableInput/>
-            <Input id="partnumber" label="Part Number" text={item.PartNumber} style={{gridColumn: '3/5'}}disableInput/>
+        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', columnGap: '1rem'}} >
+            <Input id="partnumber" label="Part Number" text={item.PartNumber} style={{gridColumn: '1/3'}} edit={async () => {
+                const input = document.querySelector('#partnumber');
+                item.PartNumber = input.value
+                const res = await item.sendToAPI()
+                if(!res.acknowledged) return;
+                input.value = ''
+                router.replace(router.asPath)
+            }}/>
+            <Input id="brandid" label="Brand Id" text={item.BrandAAIAID} style={{gridColumn: '3/4'}}  edit={async () => {
+                const input = document.querySelector('#brandid');
+                item.BrandAAIAID = input.value
+                const res = await item.sendToAPI()
+                if(!res.acknowledged) return;
+                input.value = ''
+                router.replace(router.asPath)
+            }}/>
+            <Input id="partterm" label="Part Terminology ID" text={item?.PartTerminologyID} style={{gridColumn: '4/5'}} edit={async () => {
+                const input = document.querySelector('#partterm');
+                item.PartTerminologyID = input.value
+                const res = await item.sendToAPI()
+                if(!res.acknowledged) return;
+                input.value = ''
+                router.replace(router.asPath)
+            }}/>
             {item?.Descriptions?.Description.map((data, index) => {
                 data = jsonToClass(Description, JSON.stringify(data))
                 return (

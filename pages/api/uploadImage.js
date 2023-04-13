@@ -43,17 +43,10 @@ export default async (req, res) => {
                 }
             })
     
-            const fileName = `images/${data.data.name}`
+            const fileName = `${data.data.name}`
             const fileType = data.data.name.split('.')[1]
             const fileId = data.data.id;
-
-            const allows = await drive.permissions.create({
-                fileId: fileId,
-                requestBody: {
-                    role: 'reader',
-                    type: 'anyone'
-                }
-            })
+            
             const url = `https://drive.google.com/uc?export=view&id=${fileId}`
     
             resolve({url, fileType, fileName})
