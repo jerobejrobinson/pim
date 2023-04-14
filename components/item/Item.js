@@ -11,15 +11,13 @@ export default function ItemComp({id}) {
     const router = useRouter()
     const [itemId, setItemId] = useState(null)
     const [item, setItem] = useState(null)
-    const [createObjectURL, setCreateObjectURL] = useState(null);
     const [image, setImage] = useState(null);
     const [selection, setSelection] = useState("P04")
+
     const uploadToClient = (event) => {
         if (event.target.files && event.target.files[0]) {
           const i = event.target.files[0];
-    
           setImage(i);
-          setCreateObjectURL(URL.createObjectURL(i));
         }
     };
 
@@ -34,7 +32,6 @@ export default function ItemComp({id}) {
         item.addDigitalAssets(new DigitalFileInformation(response.fileName, response.fileType, selection, response.url))
         const res = await item.sendToAPI()
         if(!res.acknowledged) return;
-        setItem(null)
         router.replace(router.asPath)
     };
 
@@ -100,7 +97,7 @@ export default function ItemComp({id}) {
                                 item.Descriptions.Description[index] = data.sendText(input.value)
                                 const res = await item.sendToAPI()
                                 if(!res.acknowledged) return;
-                                input.value = ''
+                                // input.value = ''
                                 router.replace(router.asPath)
                             }}
                         />
@@ -185,11 +182,20 @@ export default function ItemComp({id}) {
                 <option value="P01">Secondary Image</option>
             </select>
             <button onClick={uploadToServer} style={{alignSelf: 'start'}}>send</button>
-            <div  style={{gridColumn: '1/5', margin: '2rem 0 0 0', display: 'flex', flexDirection: 'row'}}>
-                {item?.DigitalAssets?.DigitalFileInformation?.map(obj => (
-                    <div style={{position: 'relative'}}>
-                        <p style={{position: 'absolute', top: '0', transform: 'translateY(-50%)', padding: '1rem', background: "#f9f9f9"}}>{obj.AssetType}</p>
-                        <img style={{width: '25%', margin: 'auto'}} src={obj.URI} />
+            <div  style={{gridColumn: '1/5', margin: '2rem 0 0 0', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+                {item?.DigitalAssets?.DigitalFileInformation?.map((obj, index) => (
+                    <div style={{position: 'relative', marginBottom: '2rem'}}>
+                        <p style={{position: 'absolute', top: '0', transform: 'translateY(-100%)', padding: '.5rem', background: "#f9f9f9"}}>{obj.AssetType}</p>
+                        <button 
+                            style={{cursor: 'pointer', position: 'absolute', top: '0', right:'0', transform: 'translateY(-50%)', padding: '.5rem', background: "red", border: 'none'}}
+                            onClick={async () => {
+                                item.removeImage(index)
+                                const res = await item.sendToAPI()
+                                if(!res.acknowledged) return;
+                                router.replace(router.asPath)
+                            }}
+                        >x</button>
+                        <img style={{width: '100%', margin: 'auto'}} src={obj.URI} />
                     </div>
                 ))}
             </div>

@@ -7,7 +7,6 @@ export default async (req, res) => {
         const client = await clientPromise;
         const db = client.db("PIM");
         const item = await db.collection("items").findOne({_id: ObjectId(id)});
-        console.log(item)
         res.json(item);
     } catch (e) {
         console.error(e);

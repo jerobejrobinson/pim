@@ -18,15 +18,17 @@ export default async function updateItem(req, res) {
         }
         
     }
-    try {
-        delete body._id
-        const client = await clientPromise
-        const db = await client.db('PIM')
-        const items = await db.collection('items')
-        const query = await items.replaceOne({_id: ObjectId(_id)}, {...body})
-        res.status(200).json(query)
-    } catch(e) {
-        console.log(e)
-        res.status(400);
+    if(_id) {
+        try {
+            delete body._id
+            const client = await clientPromise
+            const db = await client.db('PIM')
+            const items = await db.collection('items')
+            const query = await items.replaceOne({_id: ObjectId(_id)}, {...body})
+            res.status(200).json(query)
+        } catch(e) {
+            console.log(e)
+            res.status(400);
+        }
     }
 }

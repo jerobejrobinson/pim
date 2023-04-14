@@ -16,7 +16,20 @@ export default function PartInterchangeCard({item}) {
             {item.PartInterchangeInfo.PartInterchange.map((parts, i) => (
               <div key={i} style={{display: 'flex', flexDirection: "column", border: '1px solid black', padding: "1rem", position: 'relative', margin: '1.5rem 0 1.5rem 0',  background: "#f9f9f9", gridColumn: '1/5'}}>
                 <p style={{position: 'absolute', top: 0, transform: 'translateY(-100%)', background: "#ffffff", padding: '.5rem', border: '1px solid black'}}>Brand ID: {parts['@_BrandAAIAID']}</p>
-                <p style={{margin: '.5rem 0 .5rem 0'}}>Part Number(s): {parts.PartNumber.map((part, i) => <span key={i}> {part},</span>)}</p>
+                <p style={{margin: '.5rem 0 .5rem 0'}}>Part Number(s): {parts.PartNumber.map((part, pI) => (
+                  <span key={pI} style={{position: 'relative', marginRight: '1rem'}}> 
+                    <span 
+                      style={{position: 'absolute', top: '0', right: '-10px', transform: 'translateY(-50%)', borderRadius: "100%", background: 'red', padding: '0px', width: '10px', height: '10px', cursor: 'pointer'}}
+                      onClick={async () => {
+                        item.removeInterchange(i, pI)
+                        const res = await item.sendToAPI()
+                        if(!res.acknowledged) return;
+                        router.replace(router.asPath)
+                      }}
+                    ></span>
+                    {part} 
+                  </span>
+                ))}</p>
               </div>
             ))}
             <Input id="xcrossBrandID" label="Brand Id" onChange={(e) => setBrandId(e.target.value)} style={{gridColumn: '1/2'}}/>
