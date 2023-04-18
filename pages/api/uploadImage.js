@@ -19,7 +19,7 @@ export default async (req, res) => {
         redirect_uri
     )
 
-    oauth2Client.setCredentials({refresh_token: refresh_token})
+    oauth2Client.setCredentials({refresh_token: process.env.GOOGLE_REFRESH_TOKEN})
 
     const drive = google.drive({
         version: 'v3',

@@ -1,6 +1,5 @@
 import clientPromise from '@/lib/mongodb'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
 
 import { XML, PIES, Item, jsonToClass } from '@/lib/PIES'
 
@@ -32,12 +31,10 @@ export async function getServerSideProps() {
 }
 
 export default function Home({isConnected, items}) {
-  const router = useRouter()
   const [ itemArray, setItemArray ] = useState(null)
   const [ addNewItem, setAddNewItem ] = useState(false)
   const [ activeClone, setActiveClone] = useState(false)
   const [ currentItemId, setCurrentItemId ] = useState(null)
-  const [ previousItemIds, setPreviousItemId ] = useState([])
 
   useEffect(() => {
     if(!isConnected) return;
