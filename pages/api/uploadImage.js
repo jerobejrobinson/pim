@@ -29,16 +29,16 @@ export default async (req, res) => {
     const form = new formidable.IncomingForm();
 
     const data = await new Promise((resolve, reject) => {
-        form.parse(req, async function (err, fields, files) {
+        form.parse(req, async function (err, fields, { file }) {
             const { data }= await drive.files.create({
                 requestBody: {
-                    name: `${files.file.originalFilename}`,
-                    mimeType: files.file.mimetype,
+                    name: `${file.originalFilename}`,
+                    mimeType: file.mimetype,
                     parents: ['1DV-vhLiT3wrQchuFp-qNwIi3REqTEDF4']
                 },
                 media: {
-                    mimeType: files.file.mimetype,
-                    body: fs.createReadStream(files.file.filepath)
+                    mimeType: file.mimetype,
+                    body: fs.createReadStream(file.filepath)
                 }
             })
     
@@ -47,6 +47,9 @@ export default async (req, res) => {
             const fileId = data.id;
             
             const url = `https://drive.google.com/uc?export=view&id=${fileId}`
+            
+            // console.log(data)
+            // console.log(url)
     
             resolve({url, fileType, fileName})
         });

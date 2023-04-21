@@ -44,14 +44,21 @@ export default function Home({isConnected, items}) {
     })
   }, [])
 
-  const generatePiesXML = () => {
+  const generatePiesXML = async () => {
+    const items = await fetch(`/api/getItems?all=true`, {
+      method: 'GET'
+    }).then(res => res.json()).then(data => data)
+
     const xml = new XML()
     const p = new PIES()
-    itemArray.map(item => {
+
+    items.map(item => {
       p.addItem(jsonToClass(Item, JSON.stringify(item)))
     })
+
     console.log(xml.getOutput(p))
   }
+  
   if(!itemArray) return <div>loading...</div>
   return (
     <div style={{display: 'grid', gridTemplateColumns: '1fr 3fr', gridTemplateRows: '50px 1fr', gridTemplateAreas: '"top top" "nav main"', height: '100vh', overflow: 'hidden'}}>
@@ -147,7 +154,7 @@ export default function Home({isConnected, items}) {
 
         {/* basic footer */}
         <div style={{gridArea: "footer", backgroundColor: 'whitesmoke', textAlign: 'center'}}>
-          Developed At MSP Diesel Solutions
+          Developed At MSP Diesel Solutions | item count: {itemArray.length}
         </div>
       </div>
 
