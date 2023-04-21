@@ -47,9 +47,6 @@ export default async (req, res) => {
             const fileId = data.id;
             
             const url = `https://drive.google.com/uc?export=view&id=${fileId}`
-            
-            // console.log(data)
-            // console.log(url)
     
             resolve({url, fileType, fileName})
         });
